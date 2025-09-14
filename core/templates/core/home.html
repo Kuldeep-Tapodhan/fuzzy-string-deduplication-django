@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Data Deduplication Tool</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --bg-color: #ecf0f1;
+            --card-bg: #ffffff;
+            --text-color: #34495e;
+            --border-color: #e0e6ed;
+            --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --shadow-medium: 0 6px 18px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 960px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            background-color: var(--card-bg);
+            padding: 2.5rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow-light);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            margin-top: 0.5rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: var(--shadow-light);
+            padding: 2rem;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            animation: slideIn 0.6s ease-out forwards;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .file-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px dashed var(--border-color);
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+        
+        .file-input:hover {
+            border-color: var(--secondary-color);
+        }
+
+        .file-input input[type="file"] {
+            display: none;
+        }
+
+        .btn {
+            background-color: var(--secondary-color);
+            color: var(--card-bg);
+            padding: 12px 24px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .results-section h4 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+
+        .results-section table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .results-section th, .results-section td {
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        .results-section th {
+            background-color: #f5f7f9;
+            font-weight: 600;
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 6px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Advanced Data Deduplication Tool</h1>
+            <p>Empower your data analysis with intelligent fuzzy string matching.</p>
+        </div>
+        
+        <div class="card">
+            <div class="card-title"><i class="fas fa-upload"></i> Upload Data</div>
+            <form method="post" enctype="multipart/form-data" class="form-group">
+                {% csrf_token %}
+                <label for="file" class="file-input">
+                    <i class="fas fa-file-upload fa-2x" style="color: var(--secondary-color);"></i>
+                    <p style="margin: 0.5rem 0;">Click to select a CSV file</p>
+                    <input type="file" name="document" id="file" required>
+                </label>
+                <button type="submit" class="btn">Analyze Data</button>
+            </form>
+        </div>
+
+        {% if error %}
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle fa-lg"></i>
+                <div><strong>Error:</strong> {{ error }}</div>
+            </div>
+        {% elif results %}
+            <div class="card results-section">
+                <div class="card-title">Analysis Results</div>
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle fa-lg"></i>
+                    <div>
+                        <strong>Success!</strong> Found {{ results|length }} potential duplicate group{{ results|length|pluralize }}.
+                    </div>
+                </div>
+                {% for group_html in results %}
+                    <div class="results-table-container">
+                        <h4>Group {{ forloop.counter }}</h4>
+                        {{ group_html|safe }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% elif request.method == 'POST' %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle fa-lg"></i>
+                <div>
+                    Analysis complete. No duplicate groups were found with the current criteria.
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
